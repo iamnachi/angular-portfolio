@@ -1,0 +1,86 @@
+	<section class="resume-section p-3 p-lg-5 d-flex flex-column" id="awards" ng-controller="checkoutCtrl  as $ctrl" data-ng-init="init()">
+        <div class="my-auto">
+          <h2 class="mb-5">Checkout</h2>
+           <table class="table table-striped table-hover">
+                <tr>
+                    <th> S.No </th>
+                    <th> Book Id </th>
+                    <th> Book Name </th>
+                    <th> Qty </th>
+                    <th> Price </th>
+                </tr> 
+                <tr ng-if="carts == null">
+                    <td colspan="5"> There is no products added yet </td>
+                </tr>       
+                <tr highlight="" ng-repeat="product in carts track by $index">
+                    <td> #{{$index + 1}} </td>
+                    <td> {{product.bookId}} </td>
+                    <td> 
+                        <img src="{{product.imgUrl}}" title="{{product.bookTitle}}" style="width:80px;" class="rounded float-left img-thumbnail"/>&nbsp;&nbsp; {{product.bookTitle}} 
+                    </td>
+                    <td> <input type="number" value="1" style="width:50px;" ng-init="qty[product.bookId] = 1" ng-model="qty[product.bookId]" ng-change="init();"/> </td>
+                    <td class="cost_{{product.bookId}}">    
+                        <b>Rs {{qty[product.bookId] * product.cost}} /- </b><br>
+                    </td>
+                </tr>
+            </table> 
+            <div class="container">
+                <div class="row"> 
+                    <div class="col-md-8">
+
+                    </div>    
+                    <div class="col-md-4">
+                        <table class="table table-sm pull-right">
+                            <tr style="display:none;">
+                                <td> {{qty}} </td>
+                            </tr>    
+                            <tr>
+                                <td class="text-right"> Product Total :</td>
+                                <td> Rs {{productTotal}} /-</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"> SGST 5% :</td>
+                                <td> Rs {{SGST}} /-</td>
+                            </tr>
+                            <tr>    
+                                <td class="text-right"> CGST 5% :</td>
+                                <td> Rs {{CGST}} /-</td>
+                            </tr>
+                            <tr>    
+                                <td class="text-right"> Shipping Charge : </td>
+                                <td> {{shipping}} </td>
+                            </tr>
+                            <tr>    
+                                <td class="text-right"> <b>Total Amount :</b> </td>
+                                <td> <b>Rs {{totalAmount}} /-</b></td>
+                            </tr>
+                            
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-right">
+                        <button type="button" class="btn btn-warning" ng-click="$ctrl.openComponentModal()">
+                            Place Order
+                        </button>
+                    </div>     
+                </div>
+            </div>                 
+        </div>
+    </section>
+
+    <div class="modal-parent">
+    </div>
+
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title">Confirmation</h3>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <p>Kindly click ok to confirm your order</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+        </div>
+  </script>
