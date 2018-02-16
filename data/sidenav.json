@@ -19,4 +19,31 @@
 },{
   "name": "Dropdown",
   "path": "dropdown"
+},{
+  "name": "Modal",
+  "path": "modal"
+},{
+  "name": "Pagination",
+  "path": "pagination"
+},{
+  "name": "Popover",
+  "path": "popover"
+},{
+  "name": "Progressbar",
+  "path": "progressbar"
+},{
+  "name": "Rating",
+  "path": "rating"
+},{
+  "name": "Tabs",
+  "path": "tabs"
+},{
+  "name": "Timepicker",
+  "path": "timepicker"
+},{
+  "name": "Tooltip",
+  "path": "tooltip"
+},{
+  "name": "Typeahead",
+  "path": "typeahead"
 }]
