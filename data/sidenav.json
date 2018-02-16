@@ -1,0 +1,22 @@
+[{
+  "name": "Accordion",
+  "path": "accordion"
+},{
+  "name": "Alert",
+  "path": "alert"
+},{
+  "name": "Buttons",
+  "path": "buttons"
+},{
+  "name": "Carousel",
+  "path": "carousel"
+},{
+  "name": "Collapse",
+  "path": "collapse"
+},{
+  "name": "Datepicker",
+  "path": "datepicker"
+},{
+  "name": "Dropdown",
+  "path": "dropdown"
+}]
