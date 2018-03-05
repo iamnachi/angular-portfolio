@@ -1,0 +1,59 @@
+{
+    "attendance": {
+		"title": "February 2018",
+		"class": "X A",
+		"holidays": [ "06-02-2018", "14-02-2018"],
+		"details": [
+			{
+			"id": 1,
+			"name":"Aravind",
+			"absent": [ "07-02-2018","08-02-2018" ] 
+			},
+			{
+			"id": 2,
+			"name":"Arun",
+			"absent": [ "01-02-2018" ] 
+			},
+			{
+			"id": 3,
+			"name":"Babu",
+			"absent": [ "13-02-2018" ] 
+			},
+			{
+			"id": 4,
+			"name":"Charles",
+			"absent": [ "15-02-2018" ] 
+			},
+			{
+			"id": 5,
+			"name":"Govinda",
+			"absent": [ "08-02-2018" ] 
+			},
+			{
+			"id": 6,
+			"name":"Harish",
+			"absent": [ "27-02-2018" ] 
+			},
+			{
+			"id": 7,
+			"name":"Jeya",
+			"absent": [ "19-02-2018" ] 
+			},
+			{
+			"id": 8,
+			"name":"Saravanan",
+			"absent": [ "28-02-2018" ] 
+			},
+			{
+			"id": 9,
+			"name":"Tarun",
+			"absent": [ "22-02-2018", "23-02-2018" ] 
+			},
+			{
+			"id": 10,
+			"name":"Xavier",
+			"absent": [ "20-02-2018" ] 
+			}
+		]
+	}	
+}	

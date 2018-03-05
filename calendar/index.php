@@ -2,7 +2,10 @@
 error_reporting(1);
 
 $current = date('F Y');
-
+$current_date = date('Y')."-".date('m')."-01";
+$current_month = date('m');
+$current_year = date('Y');
+$current_minimal_year = date('y');
 
 function url_get_contents ($Url) {
     if (!function_exists('curl_init')){ 
@@ -25,337 +28,136 @@ function url_get_contents ($Url) {
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/tagmanager.min.css">
 
     <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script src="js/attendance.js"></script>
+    <script type="text/javascript" src="js/tagmanager.min.js"></script>
+	<script src="js/bootstrap3-typeahead.min.js"></script>
 </head>
 
 <body>
     <div class="container">
-        <div class="time-navigation">
-            <span class="navi-icon navi-prev" onclick="prevmonth();">❮</span>
-            <span class="navi-time"><?php echo $current; ?></span>
-            <span class="navi-icon navi-next" onclick="nextmonth();">❯</span>
-        </div>
-        
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Id </th>
-                        <th>Name</th>
-                        <?php
-                        for($i = 1; $i <=  date('t'); $i++)
-                        {
-                            $date = date('Y') . "-" . date('m') . "-" . str_pad($i, 2, '0', STR_PAD_LEFT);
-                            $day_num = date('d', strtotime($date));
-                            $day_name = date('D', strtotime($date));
-                    
-                            // add the date to the dates array
-                            echo "<th>". $day_name ." ". $day_num ."</th>";
-                        }
-                        ?>
-                    </tr>    
-                </thead>
-                <tbody>
-                    <tr>
-                        <?php
-                        $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-                        $url = $actual_link."data/attendance.json";
+        <div class="form-group" style="margin-top:20px;">
+            <label>Search :</label><br>
+            <input type="text" name="tags" placeholder="Search" class="typeahead tm-input form-control tm-input-info"/>
+            <input type="hidden" name="hidden-tags"/>
+            
+        </div>    
+        <div id ="attendance">
+            <input type="hidden" name="current_month" id="current_month" value="<?php echo $current_month; ?>"/>
+            <input type="hidden" name="current_year" id="current_year" value="<?php echo $current_year; ?>"/>
+            
+            <div class="time-navigation">
+                <span class="navi-icon navi-prev" onclick="prevmonth('<?php echo $current_date; ?>');">❮</span>
+                <span class="navi-time"><?php echo $current; ?></span>
+                <span class="navi-icon navi-next" onclick="nextmonth('<?php echo $current_date; ?>');">❯</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Id </th>
+                            <th>Name</th>
+                            <?php
+                            for($i = 1; $i <=  date('t'); $i++)
+                            {
+                                $date = date('Y') . "-" . date('m') . "-" . str_pad($i, 2, '0', STR_PAD_LEFT);
+                                $day_num = date('d', strtotime($date));
+                                $day_name = date('D', strtotime($date));
                         
-                        $str = url_get_contents($url);
-                        $array = json_decode($str);
-                        print_r($array);
-                        ?>
-                        <td></td>
-                        <td></td>
-                        <?php
-                        for($i = 1; $i <=  date('t'); $i++)
-                        {
-                            $date = date('Y') . "-" . date('m') . "-" . str_pad($i, 2, '0', STR_PAD_LEFT);
-                            $day_num = date('d', strtotime($date));
-                            $day_name = date('D', strtotime($date));
-                    
-                            // add the date to the dates array
-                            if($day_name == 'Sat' || $day_name=='Sun')
-                            echo "<td class='color-1'>W</td>";
-                            else
-                            echo "<td ></td>";
-                            
-                        }
-                        ?>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                                // add the date to the dates array
+                                echo "<th>". $day_name ." ". $day_num ."</th>";
+                            }
+                            ?>
+                        </tr>    
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <?php
+                            $actual_link = "http://$_SERVER[HTTP_HOST]/calendar/";
+                            $url = $actual_link."data/attendance_".$current_month."_".$current_minimal_year.".json";
+                            $str = url_get_contents($url);
+                            //echo $str;
+                            $manage = (array) json_decode($str);
+                            //print_r($manage);
+                            $holidays = $manage['attendance']->holidays;
+                            $students = $manage['attendance']->details;
+                            //print_r($holidays);
+                            //print_r($students);
+                            if(count($students) == 0) {
+                                echo 'The attendance details for the month '.$current.' is not available.';
+                            }
 
-        <div class="timetable-example">
-            <div class="tiva-timetable" data-view="week" data-mode="day" id="timetable-1">
-                <div class="timetable-week show-time">
-                    <div class="timetable-axis">
-                        <div class="axis-item">Arulvoli</div>
-                        <div class="axis-item">Arun</div>
-                        <div class="axis-item">11:00</div>
-                        <div class="axis-item">12:00</div>
-                        <div class="axis-item">13:00</div>
-                        <div class="axis-item">14:00</div>
-                        <div class="axis-item">15:00</div>
-                        <div class="axis-item">16:00</div>
-                        <div class="axis-item">17:00</div>
-                        <div class="axis-item">18:00</div>
-                        <div class="axis-item">19:00</div>
-                    </div>
-                    <div class="timetable-columns">
-                        <div class="timetable-column">
-                            <div class="timetable-column-header ">Sunday
-                                <br>
-                                <span>Feb 25, 2018</span>
-                            </div>
-                            <div class="timetable-column-content">
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-4" style="top:27px; height:82px; " href="#timetable-1-popup-0">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Roger Hodgson</div>
-                                            <div class="timetable-time">09:30 - 11:00</div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-1" style="top:330px; height:137px; " href="#timetable-1-popup-10">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Musiq SoulChild - Grown &amp; Sexy 16</div>
-                                            <div class="timetable-time">15:00 - 17:30</div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="timetable-column-grid">
-                                <div class="grid-item first-column"></div>
-                                <div class="grid-item first-column"></div>
-                                <div class="grid-item first-column"></div>
-                                <div class="grid-item first-column"></div>
-                                <div class="grid-item first-column"></div>
-                                <div class="grid-item first-column"></div>
-                                <div class="grid-item first-column"></div>
-                                <div class="grid-item first-column"></div>
-                                <div class="grid-item first-column"></div>
-                                <div class="grid-item first-column"></div>
-                            </div>
-                        </div>
-                        <div class="timetable-column">
-                            <div class="timetable-column-header ">Monday
-                                <br>
-                                <span>Feb 26, 2018</span>
-                            </div>
-                            <div class="timetable-column-content">
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-2" style="top:247px; height:137px; " href="#timetable-1-popup-7">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Festival of Praise Tour</div>
-                                            <div class="timetable-time">13:30 - 16:00</div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="timetable-column-grid">
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                            </div>
-                        </div>
-                        <div class="timetable-column">
-                            <div class="timetable-column-header ">Tuesday
-                                <br>
-                                <span>Feb 27, 2018</span>
-                            </div>
-                            <div class="timetable-column-content">
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-1" style="top:55px; height:82px; " href="#timetable-1-popup-1">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Musiq SoulChild - Grown &amp; Sexy 16</div>
-                                            <div class="timetable-time">10:00 - 11:30</div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-3" style="top:330px; height:165px; width:50%;" href="#timetable-1-popup-8">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Lucha Libre</div>
-                                            <div class="timetable-time">15:00 - 18:00</div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-4" style="top:330px; height:165px; width:50%;left:50%" href="#timetable-1-popup-9">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Roger Hodgson</div>
-                                            <div class="timetable-time">15:00 - 18:00</div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="timetable-column-grid">
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                            </div>
-                        </div>
-                        <div class="timetable-column">
-                            <div class="timetable-column-header ">Wednesday
-                                <br>
-                                <span>Feb 28, 2018</span>
-                            </div>
-                            <div class="timetable-column-content">
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-3" style="top:110px; height:55px; " href="#timetable-1-popup-3">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Roger Hodgson</div>
-                                            <div class="timetable-time">11:00 - 12:00</div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-1" style="top:220px; height:137px; " href="#timetable-1-popup-6">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Musiq SoulChild - Grown &amp; Sexy 16</div>
-                                            <div class="timetable-time">13:00 - 15:30</div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="timetable-column-grid">
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                            </div>
-                        </div>
-                        <div class="timetable-column">
-                            <div class="timetable-column-header ">Thursday
-                                <br>
-                                <span>Mar 1, 2018</span>
-                            </div>
-                            <div class="timetable-column-content">
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-2" style="top:165px; height:110px; " href="#timetable-1-popup-4">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Lucha Libre</div>
-                                            <div class="timetable-time">12:00 - 14:00</div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-3" style="top:385px; height:165px; " href="#timetable-1-popup-12">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Festival of Praise Tour</div>
-                                            <div class="timetable-time">16:00 - 19:00</div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="timetable-column-grid">
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                            </div>
-                        </div>
-                        <div class="timetable-column">
-                            <div class="timetable-column-header ">Friday
-                                <br>
-                                <span>Mar 2, 2018</span>
-                            </div>
-                            <div class="timetable-column-content">
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-2" style="top:73px; height:64px; " href="#timetable-1-popup-2">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Roger Hodgson</div>
-                                            <div class="timetable-time">10:20 - 11:30</div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-4" style="top:330px; height:137px; " href="#timetable-1-popup-11">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Roger Hodgson</div>
-                                            <div class="timetable-time">15:00 - 17:30</div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="timetable-column-grid">
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                            </div>
-                        </div>
-                        <div class="timetable-column">
-                            <div class="timetable-column-header last-column">Saturday
-                                <br>
-                                <span>Mar 3, 2018</span>
-                            </div>
-                            <div class="timetable-column-content">
-                                <div class="timetable-item">
-                                    <a class="timetable-title color-3" style="top:165px; height:220px; " href="#timetable-1-popup-5">
-                                        <div class="timetable-title-wrap">
-                                            <div class="timetable-name">Lucha Libre</div>
-                                            <div class="timetable-time">12:00 - 16:00</div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="timetable-column-grid">
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                                <div class="grid-item "></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            foreach($students as $student) {
+                                echo "<tr>";
+                                echo "<td>".$student->id."</td>";
+                                echo "<td>".$student->name."</td>";
+                                $absent = $student->absent;
+                                for($i = 1; $i <=  date('t'); $i++)
+                                {
+                                    $date = date('Y') . "-" . date('m') . "-" . str_pad($i, 2, '0', STR_PAD_LEFT);
+                                    $day_num = date('d', strtotime($date));
+                                    $day_name = date('D', strtotime($date));
+                                    
+                                    $date_check = str_pad($i, 2, '0', STR_PAD_LEFT) . "-" . date('m') . "-" . date('Y');    
+                                
+                                    // add the date to the dates array
+                                    if($day_name == 'Sat' || $day_name=='Sun')
+                                    echo "<td class='weekend'>W</td>";
+                                    else if(in_array($date_check, $absent)) 
+                                    echo "<td class='absent'>A</td>";
+                                    else if(in_array($date_check, $holidays)) 
+                                    echo "<td class='holidays'>H</td>";
+                                    else
+                                    echo "<td ></td>";
+                                }
+                                echo "</tr>";
+                            }
+                            ?>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-
+        <!-- ajax loader -->
     </div>
-
 </body>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var tagApi = $(".tm-input").tagsManager();
 
+		jQuery(".typeahead").typeahead({
+	      name: 'tags',
+	      displayKey: 'name',
+	      source: function (query, process) {
+        		return $.get('data/students.json', { query: query }, function (data) {
+        			// data = $.parseJSON(data);
+	            	return process(data);
+	        	});
+    		},
+    	  afterSelect :function (item){
+    	  	tagApi.tagsManager("pushTag", item.name);
+            //console.log( $('input[name="hidden-tags"]').val() );
+            //search( $('input[name="hidden-tags"]').val(), $("#current_month").val(), $("#current_year").val() );
+    	  }
+	    });
+
+        jQuery('input[name="hidden-tags"]').on('change', function() {
+            //console.log( this.value );
+            search( this.value, $("#current_month").val(), $("#current_year").val() );
+        });
+	});
+
+    function search(value, currentMonth, currentYear) {
+        $.get("search.php", { month: currentMonth, year: currentYear, search: value },
+        function(data, status){
+            if(status == "success") {
+                //alert("Data: " + data + "\nStatus: " + status);
+                $("#attendance").html(data);
+            }
+        });
+    }
+ </script>
 </html>

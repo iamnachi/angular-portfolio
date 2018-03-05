@@ -1,0 +1,59 @@
+{
+    "attendance": {
+		"title": "April 2018",
+		"class": "X A",
+		"holidays": [ "11-04-2018", "24-04-2018"],
+		"details": [
+			{
+			"id": 1,
+			"name":"Aravind",
+			"absent": [ "19-04-2018","14-04-2018" ] 
+			},
+			{
+			"id": 2,
+			"name":"Arun",
+			"absent": [ "02-04-2018", "03-04-2018" ] 
+			},
+			{
+			"id": 3,
+			"name":"Babu",
+			"absent": [ "06-04-2018" ] 
+			},
+			{
+			"id": 4,
+			"name":"Charles",
+			"absent": [ "03-04-2018" ] 
+			},
+			{
+			"id": 5,
+			"name":"Govinda",
+			"absent": [ "12-04-2018" ] 
+			},
+			{
+			"id": 6,
+			"name":"Harish",
+			"absent": [ "19-04-2018" ] 
+			},
+			{
+			"id": 7,
+			"name":"Jeya",
+			"absent": [ "25-04-2018" ] 
+			},
+			{
+			"id": 8,
+			"name":"Saravanan",
+			"absent": [ "17-04-2018" ] 
+			},
+			{
+			"id": 9,
+			"name":"Tarun",
+			"absent": [ "20-04-2018" ] 
+			},
+			{
+			"id": 10,
+			"name":"Xavier",
+			"absent": [ "23-04-2018", "24-04-2018" ] 
+			}
+		]
+	}	
+}	

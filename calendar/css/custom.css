@@ -7,7 +7,17 @@ th {
     color: white;
 } 
 
-.color-1 {
+.weekend {
     background:#f5d76a;
+    text-align: center;
+}
+
+.absent {
+    background:#ffc6cd;
+    text-align: center;
+}
+
+.holidays {
+    background:#cdffc6;
     text-align: center;
 }
